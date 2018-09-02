@@ -21,8 +21,10 @@ class App extends Component {
 
   post = () => {
     const obj = {
-      id: '1',
-      room: '1',
+      name: 'Hola',
+      room: 'VArdagsrummet',
+      interval: '3',
+      watered_latest: '324'
     };
     fire('Flowers', 'POST', obj)
   }

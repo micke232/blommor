@@ -11,7 +11,9 @@ const fire = (endpoint, type, data) => {
     storageBucket: "home-flower-app.appspot.com",
     messagingSenderId: "235132733786"
   };
-  firebase.initializeApp(config)
+  if(!firebase.apps.length){
+    firebase.initializeApp(config)
+  }
   const db = firebase.firestore();
 
   if (type === 'GET'){
@@ -28,7 +30,16 @@ const fire = (endpoint, type, data) => {
     return flowers;
   }
   if (type === 'POST'){
-    console.log(data.id)
+
+    const putFlowers = db.collection(endpoint);
+
+    putFlowers.add({
+        name: data.name,
+        room: data.room,
+        interval: data.interval,
+        watered_latest: data.watered_latest,
+      });
+      
   }
 }
 
