@@ -1,6 +1,5 @@
-const firebase = require("firebase");
-// Required for side-effects
-require("firebase/firestore");
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 const fire = (endpoint, type, data) => {
   const config = {

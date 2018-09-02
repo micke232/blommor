@@ -1,17 +1,29 @@
 import React, { Component } from 'react';
 import RoomCard from './RoomCard/RoomCard';
+import FlowerCard from './FlowerCard/FlowerCard';
 import fire from './fire'
+import loader from './loader.gif'
 import './App.css';
 
 class App extends Component {
 
   state = {
     roomSelected: '',
+    rooms: [],
+    flowers: [],
+    init: false,
   }
 
   componentDidMount() {
-   fire('Flowers', 'GET').then((data)=>{
-    this.setState({ flowers: data })
+   fire('flowers', 'GET').then((data)=>{
+    const rooms = [];
+    data.forEach((room) => {
+      const checkIfExist = rooms.find((unique)=> unique === room.room)
+      if (!checkIfExist) {
+        rooms.push(room.room)
+      }
+    });
+    this.setState({ flowers: data, rooms, init: true })
    })
   }
 
@@ -21,36 +33,45 @@ class App extends Component {
 
   post = () => {
     const obj = {
-      name: 'Hola',
-      room: 'VArdagsrummet',
+      name: 'Växt 1',
+      room: 'Köket',
       interval: '3',
       watered_latest: '324'
     };
-    fire('Flowers', 'POST', obj)
+    fire('flowers', 'POST', obj)
   }
 
   renderRooms() {
-    return (
-      <React.Fragment>
-        <RoomCard onRoomClicked={this.onRoomClicked} name={'Vardagsrum'} />
-        <RoomCard onRoomClicked={this.onRoomClicked} name={'Stora Sovrummet'} />
-        <RoomCard onRoomClicked={this.onRoomClicked} name={'Rasmus Rum'} />
-        <RoomCard onRoomClicked={this.onRoomClicked} name={'Kök'} />
-      </React.Fragment>
-    );
+    const { rooms } = this.state;
+    return rooms.map((room)=> <RoomCard key={room} onRoomClicked={this.onRoomClicked} name={room} />)
+    ;
+  }
+
+  renderFlowers() {
+    const { flowers, roomSelected } = this.state;
+    return flowers.map((flower)=> {
+      if(flower.room === roomSelected )  {
+        return <FlowerCard key={flower.name} name={flower.name} />
+      } else return null;
+    })
   }
 
   render() {
-
-    const { roomSelected } = this.state;
-
+    const { roomSelected, init } = this.state;
     return (
       <div className="mainContainer">
         <h1>Flower Check</h1>
         <button onClick={this.post}>POST</button>
         {
+          !init && <img src={loader} />
+        }
+        {
           roomSelected === '' && this.renderRooms()
         }
+        {
+          roomSelected !== '' && this.renderFlowers()
+        }
+        <button onClick={()=>this.onRoomClicked('')}>back</button>
       </div>
     );
   }
