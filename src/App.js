@@ -10,9 +10,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-
-   const flowers = fire('Flowers').then((data)=>{
-     console.log('flowers', data)
+   fire('Flowers', 'GET').then((data)=>{
     this.setState({ flowers: data })
    })
   }
@@ -21,8 +19,15 @@ class App extends Component {
     this.setState({ roomSelected: room })
   }
 
+  post = () => {
+    const obj = {
+      id: '1',
+      room: '1',
+    };
+    fire('Flowers', 'POST', obj)
+  }
+
   renderRooms() {
-    console.log(this.state.flowers)
     return (
       <React.Fragment>
         <RoomCard onRoomClicked={this.onRoomClicked} name={'Vardagsrum'} />
@@ -40,6 +45,7 @@ class App extends Component {
     return (
       <div className="mainContainer">
         <h1>Flower Check</h1>
+        <button onClick={this.post}>POST</button>
         {
           roomSelected === '' && this.renderRooms()
         }
