@@ -10,16 +10,19 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const data = fire.database().ref('flowers')
-    console.log(data)
+
+   const flowers = fire('Flowers').then((data)=>{
+     console.log('flowers', data)
+    this.setState({ flowers: data })
+   })
   }
 
   onRoomClicked = ( room ) => {
     this.setState({ roomSelected: room })
   }
 
-
   renderRooms() {
+    console.log(this.state.flowers)
     return (
       <React.Fragment>
         <RoomCard onRoomClicked={this.onRoomClicked} name={'Vardagsrum'} />
