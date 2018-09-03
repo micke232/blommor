@@ -1,5 +1,17 @@
 .flowerCardContainer {
     margin: 20px;
     padding: 20px;
-    background-color: rgb(163, 94, 228);
+    background-color: #E07A5F;
+}
+
+.flowerCardButton {
+    margin: 10px 5px 0px 5px;
+    padding: 10px 30px 10px 30px;
+    background-color: #81B29A;
+    border: none;
+}
+
+.flowerCardButton:active{
+    background-color: #3D405B;
+    border: none;
 }
