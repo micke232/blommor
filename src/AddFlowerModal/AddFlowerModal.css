@@ -1,0 +1,18 @@
+input {
+    padding: 5px;
+    margin: 10px;
+}
+
+p {
+    margin: 0px;
+}
+
+.addFlowerModalContainer {
+    color: #F4F1DE;
+    background-color: #3D405B;
+    margin: 0px 10px;
+    padding: 10px;
+    z-index: 1;
+    position: absolute;
+    width: 90%;
+}

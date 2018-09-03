@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import RoomCard from './RoomCard/RoomCard';
 import FlowerCard from './FlowerCard/FlowerCard';
+import AddFlowerModal from './AddFlowerModal/AddFlowerModal';
 import fire from './fire'
 import loader from './loader.gif'
 import './App.css';
@@ -11,6 +12,7 @@ class App extends Component {
     roomSelected: '',
     rooms: [],
     flowers: [],
+    modalOpen: false,
     init: false,
   }
 
@@ -35,16 +37,6 @@ class App extends Component {
     this.setState({ roomSelected: room })
   }
 
-  post = () => {
-    const obj = {
-      name: 'Växt 1',
-      room: 'Köket',
-      interval: '3',
-      watered_latest: '324'
-    };
-    fire('flowers', 'POST', obj)
-  }
-
   renderRooms() {
     const { rooms } = this.state;
     return rooms.map((room)=> <RoomCard key={room} onRoomClicked={this.onRoomClicked} name={room} />)
@@ -55,21 +47,29 @@ class App extends Component {
     const { flowers, roomSelected } = this.state;
     return flowers.map((flower)=> {
       if(flower.room === roomSelected )  {
-        return <FlowerCard key={flower.name} update={this.update} id={flower.id} name={flower.name} />
+        return <FlowerCard key={flower.id} update={this.update} id={flower.id} name={flower.name} />
       } else return null;
     })
   }
 
+  toggleModal = () => {
+    const { modalOpen } = this.state;
+    this.setState({ modalOpen: !modalOpen })
+  }
+
   render() {
-    const { roomSelected, init } = this.state;
+    const { roomSelected, init, modalOpen } = this.state;
     if (!init) return <div className="mainContainer"><img src={loader} /></div>
     return (
       <div className="mainContainer">
         <h1>Flower Check</h1>
         {
+          modalOpen && <AddFlowerModal toggleModal={this.toggleModal} update={this.update}/>
+        }
+        {
           roomSelected !== '' && <button onClick={()=>this.onRoomClicked('')}>back</button>
         }
-        <button onClick={this.post}>Add flower</button>
+        <button onClick={this.toggleModal}>Add flower</button>
         {
           roomSelected === '' && this.renderRooms()
         }
