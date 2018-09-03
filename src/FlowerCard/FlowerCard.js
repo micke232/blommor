@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import './FlowerCard.css';
+import fire from '../fire'
 
 class FlowerCard extends Component {
 
   deleteFlower = () => {
     const { id } = this.props;
-    // do api delete
+    const obj = {
+      id: id
+    };
+    fire('flowers', 'DELETE', obj)
     console.log(id)
     this.props.update();
   }

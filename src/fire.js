@@ -40,6 +40,15 @@ const fire = (endpoint, type, data) => {
       });
       
   }
+  if (type === 'DELETE'){
+
+    db.collection(endpoint).doc(data.id).delete().then(function() {
+      console.log("Document successfully deleted!");
+    }).catch(function(error) {
+        console.error("Error removing document: ", error);
+    });
+      
+  }
 }
 
 export default fire;

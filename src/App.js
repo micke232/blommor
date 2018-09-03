@@ -18,7 +18,7 @@ class App extends Component {
     this.update();
   }
 
-  update(){
+  update = () => {
     fire('flowers', 'GET').then((data)=>{
       const rooms = [];
       data.forEach((room) => {
