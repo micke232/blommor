@@ -15,16 +15,20 @@ class App extends Component {
   }
 
   componentDidMount() {
-   fire('flowers', 'GET').then((data)=>{
-    const rooms = [];
-    data.forEach((room) => {
-      const checkIfExist = rooms.find((unique)=> unique === room.room)
-      if (!checkIfExist) {
-        rooms.push(room.room)
-      }
-    });
-    this.setState({ flowers: data, rooms, init: true })
-   })
+    this.update();
+  }
+
+  update(){
+    fire('flowers', 'GET').then((data)=>{
+      const rooms = [];
+      data.forEach((room) => {
+        const checkIfExist = rooms.find((unique)=> unique === room.room)
+        if (!checkIfExist) {
+          rooms.push(room.room)
+        }
+      });
+      this.setState({ flowers: data, rooms, init: true })
+     })
   }
 
   onRoomClicked = ( room ) => {
@@ -51,27 +55,27 @@ class App extends Component {
     const { flowers, roomSelected } = this.state;
     return flowers.map((flower)=> {
       if(flower.room === roomSelected )  {
-        return <FlowerCard key={flower.name} name={flower.name} />
+        return <FlowerCard key={flower.name} update={this.update} id={flower.id} name={flower.name} />
       } else return null;
     })
   }
 
   render() {
     const { roomSelected, init } = this.state;
+    if (!init) return <div className="mainContainer"><img src={loader} /></div>
     return (
       <div className="mainContainer">
         <h1>Flower Check</h1>
-        <button onClick={this.post}>POST</button>
         {
-          !init && <img src={loader} />
+          roomSelected !== '' && <button onClick={()=>this.onRoomClicked('')}>back</button>
         }
+        <button onClick={this.post}>Add flower</button>
         {
           roomSelected === '' && this.renderRooms()
         }
         {
           roomSelected !== '' && this.renderFlowers()
         }
-        <button onClick={()=>this.onRoomClicked('')}>back</button>
       </div>
     );
   }
