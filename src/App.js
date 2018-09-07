@@ -62,7 +62,7 @@ class App extends Component {
     if (!init) return <div className="mainContainer"><img src={loader} /></div>
     return (
       <div className="mainContainer">
-        <h1>Flower Check</h1>
+        <h1 className="header">Flower Check</h1>
         {
           modalOpen && <AddFlowerModal toggleModal={this.toggleModal} update={this.update}/>
         }

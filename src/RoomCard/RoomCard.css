@@ -2,6 +2,14 @@
     background-color: #E07A5F;
     color: white;
     font-weight: bold;
-    height: 100px;
+    height: 80px;
     margin: 20px 40px;
+}
+
+.doorIcon {
+    width: 80px;
+}
+
+.iconHolder {
+    width: 80px;
 }

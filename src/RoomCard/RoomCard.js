@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './RoomCard.css';
-
+import door from '../door.png'
 class RoomCard extends Component {
 
   handleRoomCardClick = () => {
@@ -13,7 +13,12 @@ class RoomCard extends Component {
     const { name } = this.props;
     return (
       <div className="roomCardContainer" onClick={this.handleRoomCardClick}>
-        {name}
+        <div className="iconHolder">
+          <img className="doorIcon" src={door}/>
+        </div>
+        <div>
+          {name}
+        </div>
       </div>
     );
   }
