@@ -1,0 +1,8 @@
+.animate {
+    opacity: 0;
+}
+
+.fadeIn {
+    opacity: 1;
+    transition: 1.2s opacity;
+}

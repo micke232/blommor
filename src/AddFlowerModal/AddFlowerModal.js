@@ -48,7 +48,7 @@ class AddFlowerModal extends Component {
   render() {
     const { name, room, interval, image } = this.state;
     return (
-      <div className="addFlowerModalContainer">
+      <div className={`addFlowerModalContainer`}>
           <p>Name:</p>
           <input onChange={this.inputName} value={name}/>
           <p>Room:</p>

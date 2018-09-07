@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './RoomCard.css';
-import door from '../door.png'
+
 class RoomCard extends Component {
 
   handleRoomCardClick = () => {
@@ -10,15 +10,10 @@ class RoomCard extends Component {
 
 
   render() {
-    const { name } = this.props;
+    const { name, color } = this.props;
     return (
-      <div className="roomCardContainer" onClick={this.handleRoomCardClick}>
-        <div className="iconHolder">
-          <img className="doorIcon" src={door}/>
-        </div>
-        <div>
+      <div className="roomCardContainer" onClick={this.handleRoomCardClick} style={{ backgroundColor: `#${color}` }}>
           {name}
-        </div>
       </div>
     );
   }

@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import RoomCard from './RoomCard/RoomCard';
 import FlowerCard from './FlowerCard/FlowerCard';
 import AddFlowerModal from './AddFlowerModal/AddFlowerModal';
+import FadeIn from './FadeIn/FadeIn';
 import fire from './fire'
 import loader from './loader.gif'
+import Colors from 'color-scheme';
 import './App.css';
 
 class App extends Component {
@@ -34,12 +36,32 @@ class App extends Component {
   }
 
   onRoomClicked = ( room ) => {
+    this.update();
     this.setState({ roomSelected: room })
+
   }
 
   renderRooms() {
     const { rooms } = this.state;
-    return rooms.map((room)=> <RoomCard key={room} onRoomClicked={this.onRoomClicked} name={room} />)
+    const scm = new Colors;
+    scm.from_hex('1d9207')
+      .scheme('triade')
+      .distance(0.1)
+      .variation('pastel')
+      .web_safe(true);
+
+    const colors = scm.colors();
+    return rooms.map((room, index)=> {
+        return (
+          <FadeIn key={room + colors[index]}>
+            <RoomCard
+              color={colors[index]}
+              onRoomClicked={this.onRoomClicked}
+              name={room}
+            />
+          </FadeIn>
+        )
+      })
     ;
   }
 
@@ -62,14 +84,23 @@ class App extends Component {
     if (!init) return <div className="mainContainer"><img src={loader} /></div>
     return (
       <div className="mainContainer">
-        <h1 className="header">Flower Check</h1>
+        <div className="header">
+          <button className="addButton" onClick={this.toggleModal}>Add flower</button>
+        </div>
         {
-          modalOpen && <AddFlowerModal toggleModal={this.toggleModal} update={this.update}/>
+          modalOpen && (
+            <FadeIn>
+              <AddFlowerModal
+                toggleModal={this.toggleModal}
+                update={this.update}
+              />
+            </FadeIn>
+          )
         }
         {
           roomSelected !== '' && <button onClick={()=>this.onRoomClicked('')}>back</button>
         }
-        <button onClick={this.toggleModal}>Add flower</button>
+        
         {
           roomSelected === '' && this.renderRooms()
         }

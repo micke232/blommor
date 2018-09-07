@@ -15,4 +15,7 @@ p {
     z-index: 1;
     position: absolute;
     width: 90%;
+    opacity: 1;
+    transition-timing-function: ease;
+    transition: 100ms opacity;
 }
