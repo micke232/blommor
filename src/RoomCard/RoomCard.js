@@ -8,7 +8,6 @@ class RoomCard extends Component {
     onRoomClicked(name)
   }
 
-
   render() {
     const { name, color } = this.props;
     return (
