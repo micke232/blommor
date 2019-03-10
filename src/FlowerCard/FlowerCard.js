@@ -19,10 +19,12 @@ class FlowerCard extends Component {
     const { name } = this.props;
     return (
       <div className="flowerCardContainer" onClick={this.handleFlowerCardClick}>
-      <img src="https://www.istockphoto.com/se/foto/anemone-blommor-i-blom-gm845538942-138594797"></img>
-        {name}
+        <img src="https://via.placeholder.com/50"/>
+        <br/>
+        <span style={{color: 'white', marginBottom: '10px'}}>{name}</span>
         <div>
           <button className="flowerCardButton">Watered</button>
+          <br/>
           <button className="flowerCardButton" onClick={this.deleteFlower}>Delete</button>
         </div>
       </div>

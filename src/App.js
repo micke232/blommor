@@ -98,7 +98,7 @@ class App extends Component {
           )
         }
         {
-          roomSelected !== '' && <button onClick={()=>this.onRoomClicked('')}>back</button>
+          roomSelected !== '' && <button className="addButton" onClick={()=>this.onRoomClicked('')} style={{marginTop: '16px'}}>back</button>
         }
         
         {

@@ -11,7 +11,7 @@ class RoomCard extends Component {
   render() {
     const { name, color } = this.props;
     return (
-      <div className="roomCardContainer" onClick={this.handleRoomCardClick} style={{ backgroundColor: `#${color}` }}>
+      <div className="roomCardContainer" onClick={this.handleRoomCardClick}>
           {name}
       </div>
     );
