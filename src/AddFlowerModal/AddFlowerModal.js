@@ -58,9 +58,9 @@ class AddFlowerModal extends Component {
           <p>Image Link:</p>
           <input onChange={this.inputImage} value={image}/>
           <br/>
-          <button onClick={this.post}>Add Flower</button>
+          <button class="modalButton" onClick={this.post}>Add Flower</button>
           <br/>
-          <button onClick={this.closeModal}>Close</button>
+          <button class="modalButton" onClick={this.closeModal}>Close</button>
       </div>
     );
   }

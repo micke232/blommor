@@ -4,8 +4,6 @@ import FlowerCard from './FlowerCard/FlowerCard';
 import AddFlowerModal from './AddFlowerModal/AddFlowerModal';
 import FadeIn from './FadeIn/FadeIn';
 import fire from './fire'
-import loader from './loader.gif'
-import Colors from 'color-scheme';
 import './App.css';
 
 class App extends Component {
@@ -15,7 +13,6 @@ class App extends Component {
     rooms: [],
     flowers: [],
     modalOpen: false,
-    init: false,
   }
 
   componentDidMount() {
@@ -31,7 +28,7 @@ class App extends Component {
           rooms.push(room.room)
         }
       });
-      this.setState({ flowers: data, rooms, init: true })
+      this.setState({ flowers: data, rooms })
      })
   }
 
@@ -43,19 +40,10 @@ class App extends Component {
 
   renderRooms() {
     const { rooms } = this.state;
-    const scm = new Colors;
-    scm.from_hex('1d9207')
-      .scheme('triade')
-      .distance(0.1)
-      .variation('pastel')
-      .web_safe(true);
-
-    const colors = scm.colors();
-    return rooms.map((room, index)=> {
+    return rooms.map((room)=> {
         return (
-          <FadeIn key={room + colors[index]}>
+          <FadeIn key={room}>
             <RoomCard
-              color={colors[index]}
               onRoomClicked={this.onRoomClicked}
               name={room}
             />
@@ -69,7 +57,7 @@ class App extends Component {
     const { flowers, roomSelected } = this.state;
     return flowers.map((flower)=> {
       if(flower.room === roomSelected )  {
-        return <FlowerCard key={flower.id} update={this.update} id={flower.id} name={flower.name} />
+        return <FlowerCard progress={flower.interval * 10} key={flower.id} update={this.update} id={flower.id} name={flower.name} />
       } else return null;
     })
   }
@@ -80,8 +68,7 @@ class App extends Component {
   }
 
   render() {
-    const { roomSelected, init, modalOpen } = this.state;
-    if (!init) return <div className="mainContainer"><img src={loader} /></div>
+    const { roomSelected, modalOpen } = this.state;
     return (
       <div className="mainContainer">
         <div className="header">
