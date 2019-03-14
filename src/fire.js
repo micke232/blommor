@@ -13,6 +13,7 @@ const fire = (endpoint, type, data) => {
   if(!firebase.apps.length){
     firebase.initializeApp(config)
   }
+
   const db = firebase.firestore();
 
   if (type === 'GET'){
@@ -28,17 +29,25 @@ const fire = (endpoint, type, data) => {
     });
     return flowers;
   }
-  if (type === 'POST'){
+
+  if (type === 'POST' && endpoint === 'rooms'){
+
+    const putRoom = db.collection(endpoint);
+
+    putRoom.add({
+        name: data.name,
+      });
+      
+  }
+  if (type === 'POST' && endpoint === 'flowers'){
 
     const putFlowers = db.collection(endpoint);
-
     putFlowers.add({
         name: data.name,
         room: data.room,
         interval: data.interval,
         watered_latest: data.watered_latest,
       });
-      
   }
   if (type === 'DELETE'){
 

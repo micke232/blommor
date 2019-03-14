@@ -7,8 +7,17 @@ class AddFlowerModal extends Component {
   state = {
     name: '',
     room: '',
+    rooms: [],
     interval: 0,
-    image: 'http://',
+    image: null,
+  }
+
+  async componentDidMount() {
+    const rooms = await fire('rooms', 'GET');
+    const roomData = rooms.map((room)=>{
+      return room.name;
+    })
+    this.setState({ rooms: roomData })
   }
 
   closeModal = () => {
@@ -19,25 +28,31 @@ class AddFlowerModal extends Component {
     this.setState({ name: e.target.value })
   }
   
-  inputRoom = (e) => {
+  handleChange = (e) => {
     this.setState({ room: e.target.value })
   }
   
   inputInterval = (e) => {
     this.setState({ interval: e.target.value })
   }
-  
-  inputImage = (e) => {
-    this.setState({ image: e.target.value })
+
+  getImage = async (e) => {
+    const response = await fetch(this.state.image);
+    const blobImage = await response.blob();
+    return blobImage;
   }
 
-  post = () => {
-    const { name, room, interval, image } = this.state;
+  handlePicture = (e) => {
+    this.setState({ image: URL.createObjectURL( e.target.files[0]) })
+  }
+
+  post = async () => {
+    const { name, room, interval } = this.state;
     const obj = {
       name: name,
       room: room,
       interval: interval,
-      image: image,
+      image: await this.getImage(),
       watered_latest: '324',
     };
     fire('flowers', 'POST', obj)
@@ -46,21 +61,34 @@ class AddFlowerModal extends Component {
   }
 
   render() {
-    const { name, room, interval, image } = this.state;
+    const { name, rooms, interval, image } = this.state;
     return (
       <div className={`addFlowerModalContainer`}>
-          <p>Name:</p>
-          <input onChange={this.inputName} value={name}/>
-          <p>Room:</p>
-          <input onChange={this.inputRoom} value={room}/>
-          <p>Interval:</p>
-          <input onChange={this.inputInterval} value={interval}/>
-          <p>Image Link:</p>
-          <input onChange={this.inputImage} value={image}/>
-          <br/>
-          <button class="modalButton" onClick={this.post}>Add Flower</button>
-          <br/>
-          <button class="modalButton" onClick={this.closeModal}>Close</button>
+        <p>Name:</p>
+        <input onChange={this.inputName} value={name}/>
+        <br/>
+        <br/>
+        <label  className="modalButton" for="file-input">Add flower image</label>
+        <input id="file-input" className="addFlowerFile" type="file" name="image" accept="image/*" capture="environment" onInput={this.handlePicture}/>
+        <br/>
+        {
+          image && <img src={image} style={{ width: '100px', height: 'auto'}}/> 
+        }
+        <br/>
+        <br/>
+        <p>Room:</p>
+        <select value={this.state.room} onChange={this.handleChange}>
+          <option value=''></option>
+          {rooms.map((room)=>{
+            return <option value={room} key={room}>{room}</option>
+          })}
+        </select>
+        <p>Interval:</p>
+        <input onChange={this.inputInterval} value={interval}/>
+        <br/>
+        <button className="modalButton" onClick={this.post}>Add Flower</button>
+        <br/>
+        <button className="modalButton" onClick={this.closeModal}>Close</button>
       </div>
     );
   }

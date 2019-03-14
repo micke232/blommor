@@ -1,0 +1,46 @@
+input {
+  padding: 15px;
+  margin: 10px;
+  font-size: 20px;
+}
+
+p {
+  margin: 0px;
+}
+
+.addRoomModalContainer {
+  color: white;
+  font-weight: bold;
+  background-color: #222222;
+  padding: 16px;
+  z-index: 1;
+  left: 0; 
+  right: 0; 
+  margin-left: auto; 
+  margin-right: auto; 
+  position: absolute;
+  width: 90%;
+  opacity: 1;
+  transition-timing-function: linear;
+  transition: 100ms opacity;
+  border: 3px dotted #0DBE98;
+}
+
+.modalButton {
+  cursor: pointer;
+  text-transform: uppercase;
+  margin: 0;
+  border: 0;
+  background-color: transparent;
+  text-decoration: underline;
+  color: white;
+  text-decoration-color: #0DBE98;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+.addFlowerFile {
+  visibility: hidden;
+  position: fixed;
+}

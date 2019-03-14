@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import RoomCard from './RoomCard/RoomCard';
 import FlowerCard from './FlowerCard/FlowerCard';
 import AddFlowerModal from './AddFlowerModal/AddFlowerModal';
+import AddRoomModal from './AddRoomModal/AddRoomModal';
 import FadeIn from './FadeIn/FadeIn';
 import fire from './fire'
 import './App.css';
@@ -12,7 +13,8 @@ class App extends Component {
     roomSelected: '',
     rooms: [],
     flowers: [],
-    modalOpen: false,
+    flowerModalOpen: false,
+    roomModalOpen: false,
   }
 
   componentDidMount() {
@@ -20,15 +22,13 @@ class App extends Component {
   }
 
   update = () => {
-    fire('flowers', 'GET').then((data)=>{
-      const rooms = [];
-      data.forEach((room) => {
-        const checkIfExist = rooms.find((unique)=> unique === room.room)
-        if (!checkIfExist) {
-          rooms.push(room.room)
-        }
-      });
-      this.setState({ flowers: data, rooms })
+    Promise.all([
+      fire('flowers', 'GET'),
+      fire('rooms', 'GET'),
+    ])
+    .then(([flowers, rooms])=>{
+      const roomData = rooms.map((room)=> room.name);
+      this.setState({ flowers, rooms: roomData })
      })
   }
 
@@ -62,22 +62,41 @@ class App extends Component {
     })
   }
 
-  toggleModal = () => {
-    const { modalOpen } = this.state;
-    this.setState({ modalOpen: !modalOpen })
+  toggleModal = (event) => {
+    const { flowerModalOpen, roomModalOpen } = this.state;
+    if(!event) return this.setState({ flowerModalOpen: false, roomModalOpen: false });
+    if (event.target.id === 'flower') this.setState({ flowerModalOpen: !flowerModalOpen, roomModalOpen: false })
+    if (event.target.id === 'room') this.setState({ roomModalOpen: !roomModalOpen, flowerModalOpen: false })
   }
 
   render() {
-    const { roomSelected, modalOpen } = this.state;
+    const {
+      roomSelected,
+      flowerModalOpen,
+      roomModalOpen,
+    } = this.state;
     return (
       <div className="mainContainer">
         <div className="header">
-          <button className="addButton" onClick={this.toggleModal}>Add flower</button>
+          <button className="addButton" id="flower" onClick={this.toggleModal}>Add flower</button>
+          <br/>
+          <br/>
+          <button className="addButton" id="room" onClick={this.toggleModal}>Add room</button>
         </div>
         {
-          modalOpen && (
+          flowerModalOpen && (
             <FadeIn>
               <AddFlowerModal
+                toggleModal={this.toggleModal}
+                update={this.update}
+              />
+            </FadeIn>
+          )
+        }
+        {
+          roomModalOpen && (
+            <FadeIn>
+              <AddRoomModal
                 toggleModal={this.toggleModal}
                 update={this.update}
               />
@@ -89,10 +108,10 @@ class App extends Component {
         }
         
         {
-          roomSelected === '' && this.renderRooms()
+          !flowerModalOpen && !roomModalOpen && roomSelected === '' && this.renderRooms()
         }
         {
-          roomSelected !== '' && this.renderFlowers()
+          !flowerModalOpen && !roomModalOpen && roomSelected !== '' && this.renderFlowers()
         }
       </div>
     );
