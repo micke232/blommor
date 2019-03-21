@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import './AddFlowerModal.css';
+import { navigate, Link } from "@reach/router";
+import './AddFlower.css';
 import fire from '../fire'
 
-class AddFlowerModal extends Component {
+class AddFlower extends Component {
 
   state = {
     name: '',
@@ -14,14 +15,15 @@ class AddFlowerModal extends Component {
 
   async componentDidMount() {
     const rooms = await fire('rooms', 'GET');
-    const roomData = rooms.map((room)=>{
-      return room.name;
+    const roomData = rooms.map((room)=> {
+        return { name: room.name, id: room.id }
+      });
+    const sortedRoomData = roomData.sort((a, b) => {
+      if(a.name.toLowerCase() < b.name.toLowerCase()) { return -1; }
+      if(a.name.toLowerCase() > b.name.toLowerCase()) { return 1; }
+      return 0;
     })
-    this.setState({ rooms: roomData })
-  }
-
-  closeModal = () => {
-    this.props.toggleModal();
+    this.setState({ rooms: sortedRoomData })
   }
 
   inputName = (e) => {
@@ -36,7 +38,7 @@ class AddFlowerModal extends Component {
     this.setState({ interval: e.target.value })
   }
 
-  getImage = async (e) => {
+  getImage = async () => {
     const response = await fetch(this.state.image);
     const blobImage = await response.blob();
     return blobImage;
@@ -48,6 +50,7 @@ class AddFlowerModal extends Component {
 
   post = async () => {
     const { name, room, interval } = this.state;
+    const { update } = this.props;
     const obj = {
       name: name,
       room: room,
@@ -55,24 +58,24 @@ class AddFlowerModal extends Component {
       image: await this.getImage(),
       watered_latest: '324',
     };
-    fire('flowers', 'POST', obj)
-    this.closeModal();
-    this.props.update();
+    await fire('flowers', 'POST', obj)
+    await update();
+    navigate('/');
   }
 
   render() {
     const { name, rooms, interval, image } = this.state;
     return (
-      <div className={`addFlowerModalContainer`}>
+      <div className={`addFlowerContainer`}>
         <p>Name:</p>
         <input onChange={this.inputName} value={name}/>
         <br/>
         <br/>
-        <label  className="modalButton" for="file-input">Add flower image</label>
+        <label  className="button" htmlFor="file-input">Add flower image</label>
         <input id="file-input" className="addFlowerFile" type="file" name="image" accept="image/*" capture="environment" onInput={this.handlePicture}/>
         <br/>
         {
-          image && <img src={image} style={{ width: '100px', height: 'auto'}}/> 
+          image && <img alt="flower" src={image} style={{ width: '100px', height: 'auto'}}/> 
         }
         <br/>
         <br/>
@@ -80,18 +83,18 @@ class AddFlowerModal extends Component {
         <select value={this.state.room} onChange={this.handleChange}>
           <option value=''></option>
           {rooms.map((room)=>{
-            return <option value={room} key={room}>{room}</option>
+            return <option value={room.id} key={room.id}>{room.name}</option>
           })}
         </select>
         <p>Interval:</p>
         <input onChange={this.inputInterval} value={interval}/>
         <br/>
-        <button className="modalButton" onClick={this.post}>Add Flower</button>
+        <button className="button" onClick={this.post}>Add Flower</button>
         <br/>
-        <button className="modalButton" onClick={this.closeModal}>Close</button>
+        <Link to="/" className="button" >Close</Link>
       </div>
     );
   }
 }
 
-export default AddFlowerModal;
+export default AddFlower;

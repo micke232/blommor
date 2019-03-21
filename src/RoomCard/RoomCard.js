@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
+import { Link } from "@reach/router";
 import './RoomCard.css';
 
 class RoomCard extends Component {
 
-  handleRoomCardClick = () => {
-    const { name, onRoomClicked } = this.props;
-    onRoomClicked(name)
-  }
-
   render() {
-    const { name, color } = this.props;
+    const { name, roomId } = this.props;
     return (
-      <div className="roomCardContainer" onClick={this.handleRoomCardClick}>
+      <Link to={`${name}`} state={{ roomId: roomId }} className="roomCardContainer">
           {name}
-      </div>
+      </Link>
     );
   }
 }

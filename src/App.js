@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import RoomCard from './RoomCard/RoomCard';
-import FlowerCard from './FlowerCard/FlowerCard';
-import AddFlowerModal from './AddFlowerModal/AddFlowerModal';
-import AddRoomModal from './AddRoomModal/AddRoomModal';
-import FadeIn from './FadeIn/FadeIn';
+import { Router, Link } from "@reach/router"
+
+import Rooms from './Rooms/Rooms';
+import AddFlower from './AddFlower/AddFlower';
+import AddRoom from './AddRoom/AddRoom';
+import SelectedRoom from './SelectedRoom/SelectedRoom';
+
 import fire from './fire'
 import './App.css';
 
 class App extends Component {
-
+  
   state = {
     roomSelected: '',
     rooms: [],
@@ -27,92 +29,36 @@ class App extends Component {
       fire('rooms', 'GET'),
     ])
     .then(([flowers, rooms])=>{
-      const roomData = rooms.map((room)=> room.name);
-      this.setState({ flowers, rooms: roomData })
-     })
-  }
-
-  onRoomClicked = ( room ) => {
-    this.update();
-    this.setState({ roomSelected: room })
-
-  }
-
-  renderRooms() {
-    const { rooms } = this.state;
-    return rooms.map((room)=> {
-        return (
-          <FadeIn key={room}>
-            <RoomCard
-              onRoomClicked={this.onRoomClicked}
-              name={room}
-            />
-          </FadeIn>
-        )
+      const roomData = rooms.map((room)=> {
+        return { name: room.name, id: room.id }
+      });
+      const sortedRoomData = roomData.sort((a, b) => {
+        if(a.name.toLowerCase() < b.name.toLowerCase()) { return -1; }
+        if(a.name.toLowerCase() > b.name.toLowerCase()) { return 1; }
+        return 0;
       })
-    ;
-  }
-
-  renderFlowers() {
-    const { flowers, roomSelected } = this.state;
-    return flowers.map((flower)=> {
-      if(flower.room === roomSelected )  {
-        return <FlowerCard progress={flower.interval * 10} key={flower.id} update={this.update} id={flower.id} name={flower.name} />
-      } else return null;
-    })
-  }
-
-  toggleModal = (event) => {
-    const { flowerModalOpen, roomModalOpen } = this.state;
-    if(!event) return this.setState({ flowerModalOpen: false, roomModalOpen: false });
-    if (event.target.id === 'flower') this.setState({ flowerModalOpen: !flowerModalOpen, roomModalOpen: false })
-    if (event.target.id === 'room') this.setState({ roomModalOpen: !roomModalOpen, flowerModalOpen: false })
+      this.setState({ flowers, rooms: sortedRoomData })
+     })
   }
 
   render() {
     const {
-      roomSelected,
-      flowerModalOpen,
-      roomModalOpen,
+      flowers,
     } = this.state;
     return (
       <div className="mainContainer">
         <div className="header">
-          <button className="addButton" id="flower" onClick={this.toggleModal}>Add flower</button>
+          <Link className="addButton" to="add-flower" id="flower">Add flower</Link>
           <br/>
           <br/>
-          <button className="addButton" id="room" onClick={this.toggleModal}>Add room</button>
+          <Link className="addButton" to="add-room" id="room">Add room</Link>
         </div>
-        {
-          flowerModalOpen && (
-            <FadeIn>
-              <AddFlowerModal
-                toggleModal={this.toggleModal}
-                update={this.update}
-              />
-            </FadeIn>
-          )
-        }
-        {
-          roomModalOpen && (
-            <FadeIn>
-              <AddRoomModal
-                toggleModal={this.toggleModal}
-                update={this.update}
-              />
-            </FadeIn>
-          )
-        }
-        {
-          roomSelected !== '' && <button className="addButton" onClick={()=>this.onRoomClicked('')} style={{marginTop: '16px'}}>back</button>
-        }
-        
-        {
-          !flowerModalOpen && !roomModalOpen && roomSelected === '' && this.renderRooms()
-        }
-        {
-          !flowerModalOpen && !roomModalOpen && roomSelected !== '' && this.renderFlowers()
-        }
+          <Router>
+            <Rooms path="/" rooms={this.state.rooms}/>
+            <AddRoom update={this.update} path="add-room" />
+            <AddFlower update={this.update} path="add-flower" />
+            <SelectedRoom path=":roomName" flowers={flowers}/>
+          </Router>
       </div>
     );
   }

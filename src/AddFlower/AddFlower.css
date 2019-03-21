@@ -14,7 +14,7 @@ p {
     margin: 0px;
 }
 
-.addFlowerModalContainer {
+.addFlowerContainer {
     color: white;
     font-weight: bold;
     background-color: #222222;
@@ -32,7 +32,7 @@ p {
     border: 3px dotted #0DBE98;
 }
 
-.modalButton {
+.button {
     text-transform: uppercase;
     margin: 0;
     border: 0;

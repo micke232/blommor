@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
+import FlowerCard from '../FlowerCard/FlowerCard';
 import './SelectedRoom.css';
 
 class SelectedRoom extends Component {
 
-  handleSelectedRoomClick = () => {
-    const { name, onFloweClicked } = this.props;
-    onFloweClicked(name)
+  renderFlowers = (flowers, roomId) => {
+    return flowers.map((flower)=> {
+      if (flower.room !== roomId) return null;
+      return <FlowerCard imagePath={flower.imagePath} progress={flower.interval * 10} key={flower.id} update={this.update} id={flower.id} name={flower.name} />
+    })
   }
-
-
+  
   render() {
-    const { name } = this.props;
+    const { roomName, flowers } = this.props;
+    const roomId = this.props.location.state.roomId;
     return (
       <div className="SelectedRoomContainer" onClick={this.handleSelectedRoomClick}>
-        {name}
+        {roomName}
+        {this.renderFlowers(flowers, roomId)}
       </div>
     );
   }

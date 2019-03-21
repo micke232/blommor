@@ -8,7 +8,7 @@ p {
   margin: 0px;
 }
 
-.addRoomModalContainer {
+.addRoomContainer {
   color: white;
   font-weight: bold;
   background-color: #222222;
@@ -26,7 +26,7 @@ p {
   border: 3px dotted #0DBE98;
 }
 
-.modalButton {
+.button {
   cursor: pointer;
   text-transform: uppercase;
   margin: 0;
